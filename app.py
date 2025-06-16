@@ -59,15 +59,41 @@ def login():
 
 @app.route('/dashboard')
 def dashboard():
-    if 'user' not in session:
-        return redirect('/login')
-    username = session['user']
-    conn = sqlite3.connect('users.db')
-    c = conn.cursor()
-    c.execute("SELECT level, mining_status FROM users WHERE username=?", (username,))
-    data = c.fetchone()
-    conn.close()
-    return render_template('dashboard.html', username=username, level=data[0], status=data[1])
+    return render_template_string("""
+    <!DOCTYPE html>
+    <html>
+    <head>
+        <title>挖矿页面</title>
+        <style>
+            body { font-family: sans-serif; text-align: center; margin-top: 100px; }
+            #mineBtn { padding: 10px 20px; font-size: 20px; }
+            #counter { font-size: 40px; color: green; margin-top: 20px; }
+        </style>
+    </head>
+    <body>
+        <h1>挖矿模拟器</h1>
+        <button id="mineBtn">开始挖矿</button>
+        <div id="counter">0</div>
+
+        <script>
+            let mining = false;
+            let counter = 0;
+            let interval;
+
+            document.getElementById("mineBtn").onclick = function () {
+                if (!mining) {
+                    mining = true;
+                    this.innerText = "挖矿中...";
+                    interval = setInterval(() => {
+                        counter += Math.floor(Math.random() * 5 + 1); // 每次增加 1~5
+                        document.getElementById("counter").innerText = counter;
+                    }, 1000); // 每秒增加
+                }
+            };
+        </script>
+    </body>
+    </html>
+    """)
 
 @app.route('/mine')
 def mine():
