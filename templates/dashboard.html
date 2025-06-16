@@ -1,11 +1,30 @@
 <!DOCTYPE html>
 <html>
-<head><title>用户面板</title></head>
+<head>
+    <title>挖矿面板</title>
+    <meta http-equiv="refresh" content="5"> <!-- 每5秒刷新页面，动态显示数据 -->
+</head>
 <body>
-  <h2>欢迎，{{ username }}！</h2>
-  <p>等级：{{ level }}</p>
-  <p>挖矿状态：{{ status }}</p>
-  <a href="/mine">开始挖矿</a> |
-  <a href="/logout">退出登录</a>
+    <h2>欢迎 {{ session['username'] }}</h2>
+    <p>当前等级：{{ user.level }}</p>
+    <p>挖矿速度：{{ user.level }} 级 => 每秒 {{ user.level }} 单位</p>
+    <p>总挖矿量：{{ user.total_mined }}</p>
+    <p>当前状态：{{ '正在挖矿中...' if user.mining else '已暂停' }}</p>
+    
+    <form action="/start_mining">
+        <button type="submit">开始挖矿</button>
+    </form>
+    
+    <form action="/pause_mining">
+        <button type="submit">暂停挖矿</button>
+    </form>
+
+    <form action="/upgrade">
+        <button type="submit">升级等级（最多3级）</button>
+    </form>
+
+    <form action="/logout">
+        <button type="submit">退出登录</button>
+    </form>
 </body>
 </html>
